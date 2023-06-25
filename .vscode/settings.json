@@ -1,0 +1,4 @@
+{
+    "cmake.sourceDirectory": "/home/rafael/dev/git/cmake-stm32g4-ll/example",
+    "cmake.buildDirectory": "${workspaceFolder}/example/build",
+}
