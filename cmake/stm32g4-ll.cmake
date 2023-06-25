@@ -12,6 +12,10 @@ function(stm32g4_target_set_mcu target mcu)
     string(TOLOWER ${mcu_prefix} mcu_lower)
     string(TOUPPER ${mcu_prefix} mcu_upper)
 
+    if(NOT ${mcu_lower} MATCHES "^stm32g4(a1|31|41|71|73|74|83|84|91)$")
+        message(FATAL_ERROR "Unsupported STM32G4 microcontroller: ${mcu}")
+    endif()
+
     target_sources(${target} PRIVATE
         ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../vendor/cmsis_device_g4/src/startup_${mcu_lower}xx.s
         ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../vendor/cmsis_device_g4/src/system_stm32g4xx.c
