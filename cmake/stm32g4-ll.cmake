@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 Rafael G. Martins <rafael@rafaelmartins.eng.br>
 # SPDX-License-Identifier: BSD-3-Clause
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
@@ -13,8 +13,8 @@ function(stm32g4_target_set_mcu target mcu)
     string(TOUPPER ${mcu_prefix} mcu_upper)
 
     target_sources(${target} PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/../vendor/cmsis_device_g4/src/startup_${mcu_lower}xx.s
-        ${CMAKE_CURRENT_LIST_DIR}/../vendor/cmsis_device_g4/src/system_stm32g4xx.c
+        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../vendor/cmsis_device_g4/src/startup_${mcu_lower}xx.s
+        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../vendor/cmsis_device_g4/src/system_stm32g4xx.c
     )
 
     target_compile_definitions(${target} PRIVATE
