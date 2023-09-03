@@ -16,10 +16,10 @@ git clone \
 
 rm -rf ./vendor/
 mkdir -p ./vendor/{cmsis_core,cmsis_device_g4}
-mkdir -p ./vendor/ll_driver/{src,include}
+mkdir -p ./vendor/ll_drivers/{src,include}
 
 wget \
-    --output-document=./vendor/ll_driver/LICENSE \
+    --output-document=./vendor/ll_drivers/LICENSE \
     https://raw.githubusercontent.com/STMicroelectronics/stm32g4xx_hal_driver/master/LICENSE.md
 
 cp \
@@ -59,15 +59,15 @@ cp \
     --recursive \
     --verbose \
     "${REPODIR}"/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_* \
-    ./vendor/ll_driver/include/
+    ./vendor/ll_drivers/include/
 
 cp \
     --recursive \
     --verbose \
     "${REPODIR}"/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_* \
-    ./vendor/ll_driver/src/
+    ./vendor/ll_drivers/src/
 
 # FMC and USB drivers depend on HAL
 rm \
     --verbose \
-    ./vendor/ll_driver/{src,include}/*_{fmc,usb}.*
+    ./vendor/ll_drivers/{src,include}/*_{fmc,usb}.*
