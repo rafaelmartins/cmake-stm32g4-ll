@@ -34,6 +34,7 @@ set_property(TARGET example
 stm32g4_target_set_mcu(example stm32g431kb)
 stm32g4_target_generate_map(example)
 stm32g4_target_generate_ihex(example)
+stm32g4_target_generate_dfu(example)
 stm32g4_target_show_size(example)
 stm32g4_target_set_linker_script(example ${CMAKE_CURRENT_SOURCE_DIR}/STM32G431KBTx_FLASH.ld)
 stm32g4_target_set_hsi_clock(example 16000000)
