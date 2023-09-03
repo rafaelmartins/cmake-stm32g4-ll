@@ -57,7 +57,7 @@ function(stm32g4_target_generate_ihex target)
 
     add_custom_command(
         OUTPUT ${target}.hex
-        COMMAND ${ARM_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${target}.hex
+        COMMAND "${ARM_OBJCOPY}" -O ihex "$<TARGET_FILE:${target}>" "${target}.hex"
         DEPENDS $<TARGET_FILE:${target}>
     )
 
@@ -85,7 +85,7 @@ function(stm32g4_target_generate_dfu target)
 
     add_custom_command(
         OUTPUT ${target}.dfu
-        COMMAND ${DFUSE_PACK} -i ${target}.hex ${target}.dfu
+        COMMAND "${DFUSE_PACK}" -i "${target}.hex" "${target}.dfu"
         DEPENDS ${target}.hex
     )
 
@@ -105,7 +105,7 @@ function(stm32g4_target_show_size target)
     add_custom_command(
         TARGET ${target}
         POST_BUILD
-        COMMAND ${ARM_SIZE} --format=berkeley "$<TARGET_FILE:${target}>"
+        COMMAND "${ARM_SIZE}" --format=berkeley "$<TARGET_FILE:${target}>"
     )
 endfunction()
 
