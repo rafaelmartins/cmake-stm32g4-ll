@@ -8,6 +8,12 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/stm32-gcc.cmake")
 
 function(stm32g4_target_set_mcu target mcu)
+    if(TARGET _stm32g4_target_set_mcu_${target})
+        message(WARNING "stm32g4_target_set_mcu(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_mcu_${target} INTERFACE)
+
     string(SUBSTRING ${mcu} 0 9 mcu_prefix)
     string(TOLOWER ${mcu_prefix} mcu_lower)
     string(TOUPPER ${mcu_prefix} mcu_upper)
@@ -27,9 +33,16 @@ function(stm32g4_target_set_mcu target mcu)
 endfunction()
 
 function(stm32g4_target_generate_map target)
+    if(TARGET _stm32g4_target_generate_map_${target})
+        message(WARNING "stm32g4_target_generate_map(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_generate_map_${target} INTERFACE)
+
     target_link_options(${target} PRIVATE
         "-Wl,-Map,$<TARGET_FILE:${target}>.map"
     )
+
     set_property(TARGET ${target}
         APPEND
         PROPERTY ADDITIONAL_CLEAN_FILES "$<TARGET_FILE:${target}>.map"
@@ -37,6 +50,11 @@ function(stm32g4_target_generate_map target)
 endfunction()
 
 function(stm32g4_target_generate_ihex target)
+    if(TARGET ${target}-ihex)
+        message(WARNING "stm32g4_target_generate_ihex(${target}) already called, ignoring.")
+        return()
+    endif()
+
     add_custom_command(
         OUTPUT ${target}.hex
         COMMAND ${ARM_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${target}.hex
@@ -50,6 +68,12 @@ function(stm32g4_target_generate_ihex target)
 endfunction()
 
 function(stm32g4_target_show_size target)
+    if(TARGET _stm32g4_target_show_size_${target})
+        message(WARNING "stm32g4_target_show_size(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_show_size_${target} INTERFACE)
+
     add_custom_command(
         TARGET ${target}
         POST_BUILD
@@ -58,12 +82,24 @@ function(stm32g4_target_show_size target)
 endfunction()
 
 function(stm32g4_target_set_linker_script target script)
+    if(TARGET _stm32g4_target_set_linker_script_${target})
+        message(WARNING "stm32g4_target_set_linker_script(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_linker_script_${target} INTERFACE)
+
     target_link_options(${target} PRIVATE
         "-T${script}"
     )
 endfunction()
 
 function(stm32g4_target_set_lse_clock target frequency timeout)
+    if(TARGET _stm32g4_target_set_lse_clock_${target})
+        message(WARNING "stm32g4_target_set_lse_clock(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_lse_clock_${target} INTERFACE)
+
     target_compile_definitions(${target} PRIVATE
         LSE_VALUE=${frequency}
         LSE_STARTUP_TIMEOUT=${timeout}
@@ -71,6 +107,12 @@ function(stm32g4_target_set_lse_clock target frequency timeout)
 endfunction()
 
 function(stm32g4_target_set_hse_clock target frequency timeout)
+    if(TARGET _stm32g4_target_set_hse_clock_${target})
+        message(WARNING "stm32g4_target_set_hse_clock(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_hse_clock_${target} INTERFACE)
+
     target_compile_definitions(${target} PRIVATE
         HSE_VALUE=${frequency}
         HSE_STARTUP_TIMEOUT=${timeout}
@@ -78,12 +120,24 @@ function(stm32g4_target_set_hse_clock target frequency timeout)
 endfunction()
 
 function(stm32g4_target_set_lsi_clock target frequency)
+    if(TARGET _stm32g4_target_set_lsi_clock_${target})
+        message(WARNING "stm32g4_target_set_lsi_clock(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_lsi_clock_${target} INTERFACE)
+
     target_compile_definitions(${target} PRIVATE
         LSI_VALUE=${frequency}
     )
 endfunction()
 
 function(stm32g4_target_set_hsi_clock target frequency)
+    if(TARGET _stm32g4_target_set_hsi_clock_${target})
+        message(WARNING "stm32g4_target_set_hsi_clock(${target}) already called, ignoring.")
+        return()
+    endif()
+    add_library(_stm32g4_target_set_hsi_clock_${target} INTERFACE)
+
     target_compile_definitions(${target} PRIVATE
         HSI_VALUE=${frequency}
     )
@@ -124,15 +178,17 @@ endif()
 
 foreach(driver adc comp cordic crc crs dac dma exti fmac gpio hrtim i2c
         lptim lpuart opamp pwr rcc rnc rtc spi tim ucpd usart utils)
-    if(NOT TARGET stm32g4_ll_${driver})
-        add_library(stm32g4_ll_${driver} INTERFACE)
-
-        target_sources(stm32g4_ll_${driver} INTERFACE
-            ${CMAKE_CURRENT_LIST_DIR}/../vendor/ll_drivers/src/stm32g4xx_ll_${driver}.c
-        )
-
-        target_link_libraries(stm32g4_ll_${driver} INTERFACE
-            stm32g4
-        )
+    if(TARGET stm32g4_ll_${driver})
+        continue()
     endif()
+
+    add_library(stm32g4_ll_${driver} INTERFACE)
+
+    target_sources(stm32g4_ll_${driver} INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/../vendor/ll_drivers/src/stm32g4xx_ll_${driver}.c
+    )
+
+    target_link_libraries(stm32g4_ll_${driver} INTERFACE
+        stm32g4
+    )
 endforeach()
