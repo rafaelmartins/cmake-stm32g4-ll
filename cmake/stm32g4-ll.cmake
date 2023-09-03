@@ -222,6 +222,7 @@ function(stm43g4_add_stlink_targets target)
             --format ihex
             write "${target}.hex"
         DEPENDS ${target}.hex
+        USES_TERMINAL
     )
     add_custom_target(st-flash-erase
         "${ST_FLASH}"
@@ -230,12 +231,14 @@ function(stm43g4_add_stlink_targets target)
             ${STLINK_FREQ_ARG}
             ${STLINK_SERIAL_ARG}
             erase
+        USES_TERMINAL
     )
     add_custom_target(st-flash-reset
         "${ST_FLASH}"
             ${STLINK_FREQ_ARG}
             ${STLINK_SERIAL_ARG}
             reset
+        USES_TERMINAL
     )
 endfunction()
 
